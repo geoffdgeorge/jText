@@ -3,6 +3,16 @@ const axios = require(`axios`);
 const twilio = require(`twilio`);
 const keys = require(`./keys`);
 const schedule = require(`node-schedule`);
+const express = require(`express`);
+const path = require(`path`);
+
+const app = express();
+
+app.get(`/`, (req, res) => {
+	res.json(path.join(__dirname, `./index.html`))
+})
+
+const PORT = process.env.PORT || 4500;
 
 const client = new twilio(keys.server.SID, keys.server.token);
 
@@ -17,7 +27,9 @@ schedule.scheduleJob(rule, function() {
 			client.messages.create({
 				to: keys.server.targetNum,
 				from: keys.server.myPhoneNum,
-				body: `\nCategory: ${response.data[0].category.title.toUpperCase()}\nClue: ${response.data[0].question}`
+				body: `\nCategory: ${response.data[0].category.title.toUpperCase()}\nClue: ${
+					response.data[0].question
+				}`
 			});
 
 			function answer() {
@@ -35,6 +47,10 @@ schedule.scheduleJob(rule, function() {
 				console.log(err);
 			}
 		});
+});
+
+app.listen(PORT, () => {
+	console.log(`Application listening on PORT ${PORT}`);
 });
 
 /*

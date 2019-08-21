@@ -14,7 +14,7 @@ app.get(`/`, (req, res) => {
 
 const PORT = process.env.PORT || 4500;
 
-const client = new twilio(keys.server.SID, keys.server.token);
+const client = new twilio(process.env.SID, process.env.TOKEN);
 
 const rule = new schedule.RecurrenceRule();
 rule.hour = [8, 12, 22];
@@ -25,8 +25,8 @@ schedule.scheduleJob(rule, function() {
 		.get(`http://jservice.io/api/random`)
 		.then(response => {
 			client.messages.create({
-				to: keys.server.targetNum,
-				from: keys.server.myPhoneNum,
+				to: process.env.TARGET_NUM,
+				from: process.env.MY_PHONE_NUM,
 				body: `\nCategory: ${response.data[0].category.title.toUpperCase()}\nClue: ${
 					response.data[0].question
 				}`
@@ -34,8 +34,8 @@ schedule.scheduleJob(rule, function() {
 
 			function answer() {
 				client.messages.create({
-					to: keys.server.targetNum,
-					from: keys.server.myPhoneNum,
+					to: process.env.TARGET_NUM,
+					from: process.env.MY_PHONE_NUM,
 					body: response.data[0].answer
 				});
 			}

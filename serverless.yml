@@ -4,14 +4,14 @@ provider:
   name: aws
   runtime: nodejs12.x
   stage: prod
-  timeout: 4
   environment:
-    MAIL_DOT_COM_EMAIL: ${ssm:/jText_mailDotCom_email}
-    MAIL_DOT_COM_PW: ${ssm:/jText_mailDotCom_pw}
-    PHONE_EMAIL: ${ssm:/jText_phone_email}
+    MAIL_DOT_COM_EMAIL: ${ssm:/jText/mail-dot-com-email}
+    MAIL_DOT_COM_PW: ${ssm:/jText/mail-dot-com-pw}
+    PHONE_EMAIL: ${ssm:/jText/phone-email}
 
 functions:
   jText:
     handler: handler.jText
+    timeout: 240
     events:
-      - schedule: cron(* 9,12,18 * * *)
+      - schedule: cron(0 14,17,23 * * ? *)
